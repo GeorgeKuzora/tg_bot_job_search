@@ -14,7 +14,6 @@
 - [Иван](https://github.com/IvAnlexn)
 
 Командная работа ведется в сервисе Jira:
-
 - [Площадка на платформе Jira](https://georgekuzora.atlassian.net/jira/software/projects/TBJS/boards/2) 
 
 
