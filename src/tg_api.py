@@ -4,11 +4,11 @@ from aiogram.filters import Command, Text
 from aiogram.types import Message, ContentType
 from exceptions import InvalidCommandExeption
 from lexicons.lexicon import LexiconRu
+from config.config import load_config
 
-TG_BOT_TOKEN: str = os.getenvb(b"TG_BOT_TOKEN", default=b"can't access token").decode(
-    "utf-8"
-)
-bot: Bot = Bot(token=TG_BOT_TOKEN)
+config = load_config(path=".env")
+bot_token = config.tg_bot.token
+bot: Bot = Bot(token=bot_token)
 dp: Dispatcher = Dispatcher()
 lexicon_ru = LexiconRu()
 
