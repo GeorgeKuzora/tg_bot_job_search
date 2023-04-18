@@ -3,22 +3,20 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command, Text
 from aiogram.types import Message, ContentType
 from exceptions import InvalidCommandExeption
+from lexicons.lexicon import LexiconRu
 
 TG_BOT_TOKEN: str = os.getenvb(b"TG_BOT_TOKEN", default=b"can't access token").decode(
     "utf-8"
 )
 bot: Bot = Bot(token=TG_BOT_TOKEN)
 dp: Dispatcher = Dispatcher()
+lexicon_ru = LexiconRu()
 
 
 @dp.message(Command(commands=["start"]))
 async def process_start_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /start"""
-    await message.answer(
-        "Привет!\nДоступны следующие комманды:\n"
-        "/region - установить свой регион\n"
-        "/keyword - получить вакансии по ключевому слову"
-    )
+    await message.answer(lexicon_ru.get_start_command_answer())
     user_data: tuple = (
         message.date,
         message.chat.id,
@@ -41,11 +39,11 @@ async def process_region_command(message: Message) -> None:
             message.chat.username,
             region.lower(),
         )
-        await message.answer(f"Вы задали регион: {region}")
+        await message.answer(lexicon_ru.get_region_command_answer(region))
         # controller = Controller()
         # controller.set_region_data(region_data)
     except InvalidCommandExeption:
-        await message.answer(f"Вы не указали название региона")
+        await message.answer(lexicon_ru.get_invalid_region_command_answer())
 
 
 @dp.message(Command(commands=["keyword"]))
@@ -59,17 +57,17 @@ async def process_keyword_command(message: Message) -> None:
             message.chat.username,
             keyword.lower(),
         )
-        await message.answer(f"Вы задали ключевое слово: {keyword}")
+        await message.answer(lexicon_ru.get_keyword_command_answer(keyword))
         # controller = Controller()
         # controller.set_keyword_data(keyword_data)
     except InvalidCommandExeption:
-        await message.answer(f"Вы не указали ключевое слово")
+        await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
 
 @dp.message()
 async def process_other_input(message: Message) -> None:
     """Функция для сообщения о том что ввод не распознан"""
-    await message.answer("Команда не распознана")
+    await message.answer(lexicon_ru.get_invalid_command_answer())
 
 
 def set_message_text(message: Message) -> str:
