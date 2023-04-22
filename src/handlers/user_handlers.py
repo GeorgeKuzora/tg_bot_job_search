@@ -2,15 +2,15 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command, Text
 from aiogram.types import Message, ContentType
-from exceptions import InvalidCommandExeption
+from errors.errors import InvalidCommandExeption
 from lexicons.lexicon import LexiconRu
-from config.config import load_config
+from config.config import Config, load_config
 
-config = load_config(path=".env")
+config: Config = load_config(path=".env")
 bot_token = config.tg_bot.token
 bot: Bot = Bot(token=bot_token)
 dp: Dispatcher = Dispatcher()
-lexicon_ru = LexiconRu()
+lexicon_ru: LexiconRu = LexiconRu()
 
 
 @dp.message(Command(commands=["start"]))
@@ -60,6 +60,7 @@ async def process_keyword_command(message: Message) -> None:
         await message.answer(lexicon_ru.get_keyword_command_answer(keyword))
         # controller = Controller()
         # controller.set_keyword_data(keyword_data)
+        # controller.get_re
     except InvalidCommandExeption:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
