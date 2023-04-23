@@ -60,7 +60,8 @@ async def process_keyword_command(message: Message) -> None:
         await message.answer(lexicon_ru.get_keyword_command_answer(keyword))
         # controller = Controller()
         # controller.set_keyword_data(keyword_data)
-        # controller.get_re
+        # vacancy_list = controller.get_vacancy_list()
+        # await message.answer(lexicon_ru.get_keyword_command_results(vacancies_data))
     except InvalidCommandExeption:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 

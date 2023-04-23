@@ -24,3 +24,13 @@ class LexiconRu:
     def get_invalid_command_answer(self) -> str:
         """Метод возвращает ответ на неверную комманду"""
         return ("Команда не распознана")
+
+    def get_keyword_command_results(self, vacancy_data: list[tuple]) -> str:
+        get_messages = list(map(self.concat_vacancy_results, vacancy_data) )
+        get_messages = "\n".join(get_messages)
+        return get_messages
+
+    def concat_vacancy_results(self, vacancy: tuple) -> str:
+        answer_message: str = ""
+        answer_message+="f{vacancy[1]}\n{vacancy[2]}\n{vacancy[3]}\n{vacancy[4]}\n{vacancy[5]}\n\n"
+        return answer_message
