@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import Mock
 import src.handlers.user_handlers as user_handlers
-from src.errors.errors import InvalidCommandExeption
+from src.errors.errors import InvalidCommandException
 
 
 class TestUserHandlers(TestCase):
@@ -15,5 +15,5 @@ class TestUserHandlers(TestCase):
     def test_set_message_text_raises(self) -> None: 
         message = Mock()
         message.text = "first"
-        with self.assertRaises(InvalidCommandExeption):
+        with self.assertRaises(InvalidCommandException):
             _ = user_handlers.set_message_text(message)

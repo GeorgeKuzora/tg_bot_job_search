@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
-from src.errors.errors import InvalidCommandExeption
+from src.errors.errors import InvalidCommandException
 from src.lexicons.lexicon import LexiconRu
 
 
@@ -37,7 +37,7 @@ async def process_region_command(message: Message) -> None:
         await message.answer(lexicon_ru.get_region_command_answer(region))
         # controller = Controller()
         # controller.set_region_data(region_data)
-    except InvalidCommandExeption:
+    except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_region_command_answer())
 
 
@@ -57,7 +57,7 @@ async def process_keyword_command(message: Message) -> None:
         # controller.set_keyword_data(keyword_data)
         # vacancy_list = controller.get_vacancy_list()
         # await message.answer(lexicon_ru.get_keyword_command_results(vacancies_data))
-    except InvalidCommandExeption:
+    except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
 
@@ -76,7 +76,7 @@ def set_message_text(message: Message) -> str:
         validate_message_text(message_text)
         return message_text
     except IndexError:
-        raise InvalidCommandExeption
+        raise InvalidCommandException
 
 
 def validate_message_text(message_text: str) -> None:
@@ -85,4 +85,4 @@ def validate_message_text(message_text: str) -> None:
     Если текст на валиден вызвает исключение InvalidCommandExeption.
     """
     if not message_text:
-        raise InvalidCommandExeption
+        raise InvalidCommandException
