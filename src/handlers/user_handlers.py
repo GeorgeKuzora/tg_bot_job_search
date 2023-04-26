@@ -2,7 +2,7 @@ import os
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command, Text
 from aiogram.types import Message, ContentType
-from errors.errors import InvalidCommandExeption
+from src.errors.errors import InvalidCommandExeption
 from lexicons.lexicon import LexiconRu
 from config.config import Config, load_config
 
