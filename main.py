@@ -5,6 +5,7 @@ from src.handlers import user_handlers
 
 
 async def main() -> None:
+    """Главная функция, запускает бота"""
     config: Config = load_config(path=".env")
     bot_token: str = config.tg_bot.token
     bot: Bot = Bot(token=bot_token)
