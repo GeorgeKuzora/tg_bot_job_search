@@ -1,19 +1,14 @@
-import os
-from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command, Text
-from aiogram.types import Message, ContentType
+from aiogram import Router
+from aiogram.filters import Command
+from aiogram.types import Message
 from src.errors.errors import InvalidCommandExeption
-from lexicons.lexicon import LexiconRu
-from config.config import Config, load_config
+from src.lexicons.lexicon import LexiconRu
 
-config: Config = load_config(path=".env")
-bot_token = config.tg_bot.token
-bot: Bot = Bot(token=bot_token)
-dp: Dispatcher = Dispatcher()
+
 lexicon_ru: LexiconRu = LexiconRu()
+router: Router = Router()
 
-
-@dp.message(Command(commands=["start"]))
+@router.message(Command(commands=["start"]))
 async def process_start_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /start"""
     await message.answer(lexicon_ru.get_start_command_answer())
@@ -28,7 +23,7 @@ async def process_start_command(message: Message) -> None:
     # controller.set_user_data(user_data)
 
 
-@dp.message(Command(commands=["region"]))
+@router.message(Command(commands=["region"]))
 async def process_region_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /region"""
     try:
@@ -46,7 +41,7 @@ async def process_region_command(message: Message) -> None:
         await message.answer(lexicon_ru.get_invalid_region_command_answer())
 
 
-@dp.message(Command(commands=["keyword"]))
+@router.message(Command(commands=["keyword"]))
 async def process_keyword_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /keyword"""
     try:
@@ -66,7 +61,7 @@ async def process_keyword_command(message: Message) -> None:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
 
-@dp.message()
+@router.message()
 async def process_other_input(message: Message) -> None:
     """Функция для сообщения о том что ввод не распознан"""
     await message.answer(lexicon_ru.get_invalid_command_answer())
@@ -91,7 +86,3 @@ def validate_message_text(message_text: str) -> None:
     """
     if not message_text:
         raise InvalidCommandExeption
-
-
-if __name__ == "__main__":
-    dp.run_polling(bot)

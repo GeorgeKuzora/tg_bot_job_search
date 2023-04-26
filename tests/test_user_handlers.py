@@ -4,11 +4,7 @@ import src.handlers.user_handlers as user_handlers
 from src.errors.errors import InvalidCommandExeption
 
 
-class TestEnviromentAccess(TestCase):
-    
-    def test_tg_bot_token(self) -> None:
-        token_pattern: str = r"^\d.*"
-        self.assertTrue(type(user_handlers.bot_token), type("string"))
+class TestUserHandlers(TestCase):
     
     def test_set_message_text(self) -> None: 
         message = Mock()
