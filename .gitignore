@@ -2,3 +2,5 @@ venv/
 *.pyc
 *.org
 src/data/
+.env
+pyrightconfig.json
