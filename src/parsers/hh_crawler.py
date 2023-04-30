@@ -32,14 +32,16 @@ IN_PARAMS = {
 
 def get_links(link: str, in_params: dict) -> str:
     '''Находим и передаём через генератор ссылки на все вакансии по запросу'''
-    soup = bs(get_server_response(link, in_params).content, "lxml")
-    page_count = get_number_pages(soup)
-    for page in range(FIRST_PAGE, page_count + 1):
-        in_params["page"] = page
+    try:
         soup = bs(get_server_response(link, in_params).content, "lxml")
-        print(page, "/", page_count, "links:")
-        yield from get_vacancy_ref(soup)
-        time.sleep(1)
+        page_count = get_number_pages(soup)
+        for page in range(FIRST_PAGE, page_count + 1):
+            in_params["page"] = page
+            soup = bs(get_server_response(link, in_params).content, "lxml")
+            yield from get_vacancy_ref(soup)
+            time.sleep(1)
+    except:
+        return []
 
 
 def get_vacancy_ref(soup: bs) -> str: # как правильно указать возвращаемое значение?
@@ -142,16 +144,19 @@ def find_vacancy_location(soup: bs) -> str:
 
 def get_vacancy(link: str) -> tuple[str, str]:
     '''Парсим карточку вакансии по полученной ссылке'''
-    soup = bs(get_server_response(link).content, "lxml")
-    vacancy = (
-        ("name", find_vacancy_name(soup)),
-        ("company_name", find_vacancy_company_name(soup)),
-        ("salary", find_vacancy_salary(soup)),
-        ("location", find_vacancy_location(soup)),
-        ("reference", link)
-    )
-    return vacancy
-
+    try:
+        soup = bs(get_server_response(link).content, "lxml")
+        vacancy = (
+            ("name", find_vacancy_name(soup)),
+            ("company_name", find_vacancy_company_name(soup)),
+            ("salary", find_vacancy_salary(soup)),
+            ("location", find_vacancy_location(soup)),
+            ("reference", link)
+        )
+        return vacancy
+    except:
+        return []
+    
 
 def get_vacancys_data(keyward: str, region: str) -> list:
     '''Приём поисковых данных, парсинг и возврат 
