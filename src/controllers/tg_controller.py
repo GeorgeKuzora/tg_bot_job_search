@@ -22,5 +22,4 @@ class Controller:
         Метод для получения списка вакансий
         по запрошенному ключевому слову
         """
-        interface = InteracrorInterface()
-        return interface.get_vacancy_list(keyword_data)
+        return InteracrorInterface().get_vacancy_list(keyword_data)
