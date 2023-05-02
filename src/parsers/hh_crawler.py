@@ -3,11 +3,9 @@ from bs4 import BeautifulSoup as bs
 import fake_useragent
 import time
 import logging
-# from webdriver_manager.chrome import ChromeDriverManager
-# from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.common.action_chains import ActionChains
+from typing import Union
+from typing import Generator
+
 
 URL = "https://hh.ru/search/vacancy"
 FIRST_PAGE = 0
@@ -20,7 +18,20 @@ AREA = {
     "Волгоград": 24,
     "Воронеж": 26,
     "Екатеринбург": 3,
-    "Казань": 88
+    "Казань": 88,
+    "Калуга": 43,
+    "Краснодар": 53,
+    "Красноярск": 54,
+    "Нижний Новгород": 66,
+    "Новосибирск": 4,
+    "Ростов-на-Дону": 76,
+    "Самара": 78,
+    "Саратов": 79,
+    "Сочи": 237,
+    "Уфа": 99,
+    "Ярославль": 112,
+    "Севастополь": 130,
+    "Симферополь": 131
     }
 
 IN_PARAMS = {
@@ -30,39 +41,35 @@ IN_PARAMS = {
     }
 
 
-def get_links(link: str, in_params: dict) -> str:
+def main():
+    print(get_vacancies_data("python", "Москва"))
+
+
+def get_vacancies_data(keyword: str, region: str) -> list:
+    '''Приём поисковых данных, парсинг и возврат 
+    списка картежей с результатами поиска вакансий'''
+    IN_PARAMS["text"] = keyword
+    IN_PARAMS["area"] = AREA[region]
+    result = list()
+    for a in get_links(URL, IN_PARAMS):
+        result.append(get_vacancy(a))
+        time.sleep(1)
+    return result
+
+
+def get_links(link: str, in_params: dict[str, Union[str, int]]) -> Generator[str, None, None]:
     '''Находим и передаём через генератор ссылки на все вакансии по запросу'''
     try:
-        soup = bs(get_server_response(link, in_params).content, "lxml")
+        soup = bs(get_response_data(link, in_params).content, "lxml")
         page_count = get_number_pages(soup)
         for page in range(FIRST_PAGE, page_count + 1):
             in_params["page"] = page
-            soup = bs(get_server_response(link, in_params).content, "lxml")
+            soup = bs(get_response_data(link, in_params).content, "lxml")
             yield from get_vacancy_ref(soup)
             time.sleep(1)
     except:
         return []
-
-
-def get_vacancy_ref(soup: bs) -> str: # как правильно указать возвращаемое значение?
-    '''Парсинг ссылки на каждую вакансию из списка вакансий одной страницы результатов поиска'''
-    try:
-        for a in soup.find_all("a", attrs={"class": "serp-item__title"}):
-            yield f"{a.attrs['href'].split('?')[0]}"
-    except:
-        raise RuntimeError("vacancy reference not found")
-
-
-def get_number_pages(soup: bs) -> str:
-    '''Парсинг номера последней страницы из полученного списка 
-    страниц с результатами поиска'''
-    try:
-        page_count = int(soup.find("div", attrs={"class": "pager"}).find_all(
-                "span", recursive=False)[-1].find("a", attrs={"class": "bloko-button"}).find("span").text)
-        return page_count
-    except:
-        raise RuntimeError("number of pages wasn`t find")
-
+    
 
 def cheack_server_response(func):
     '''Проверка отвтета от серваера и его содержания 
@@ -83,7 +90,7 @@ def cheack_server_response(func):
 
 
 @cheack_server_response
-def get_server_response(link: str, in_params: dict = None) -> requests.Response:
+def get_response_data(link: str, in_params: dict[str, Union[str, int]]) -> requests.Response:
     '''Формирование и отправка GET запроса на сервер'''
     ua = fake_useragent.UserAgent()
     data = requests.get(
@@ -92,6 +99,42 @@ def get_server_response(link: str, in_params: dict = None) -> requests.Response:
         headers = {"user-agent": ua.random}
     )
     return data
+
+
+def get_number_pages(soup: bs) -> int:
+    '''Парсинг номера последней страницы из полученного списка 
+    страниц с результатами поиска'''
+    try:
+        page_count = int(soup.find("div", attrs={"class": "pager"}).find_all(
+                "span", recursive=False)[-1].find("a", attrs={"class": "bloko-button"}).find("span").text)
+        return page_count
+    except:
+        raise RuntimeError("number of pages wasn`t find")
+
+
+def get_vacancy_ref(soup: bs) -> Generator[str, None, None]:
+    '''Парсинг ссылки на каждую вакансию из списка вакансий одной страницы результатов поиска'''
+    try:
+        for a in soup.find_all("a", attrs={"class": "serp-item__title"}):
+            yield f"{a.attrs['href'].split('?')[0]}"
+    except:
+        raise RuntimeError("vacancy reference not found")
+    
+
+def get_vacancy(link: str) -> tuple[tuple[str, str, str, str, str], ...]:
+    '''Парсим карточку вакансии по полученной ссылке'''
+    try:
+        soup = bs(get_response_data(link).content, "lxml")
+        vacancy = (
+            ("name", find_vacancy_name(soup)),
+            ("company_name", find_vacancy_company_name(soup)),
+            ("salary", find_vacancy_salary(soup)),
+            ("location", find_vacancy_location(soup)),
+            ("reference", link)
+        )
+        return vacancy
+    except:
+        return ()
 
 
 def find_vacancy_name(soup: bs) -> str:
@@ -140,39 +183,7 @@ def find_vacancy_location(soup: bs) -> str:
     else:
         location = ""
     return location
-
-
-def get_vacancy(link: str) -> tuple[str, str]:
-    '''Парсим карточку вакансии по полученной ссылке'''
-    try:
-        soup = bs(get_server_response(link).content, "lxml")
-        vacancy = (
-            ("name", find_vacancy_name(soup)),
-            ("company_name", find_vacancy_company_name(soup)),
-            ("salary", find_vacancy_salary(soup)),
-            ("location", find_vacancy_location(soup)),
-            ("reference", link)
-        )
-        return vacancy
-    except:
-        return []
     
-
-def get_vacancys_data(keyward: str, region: str) -> list:
-    '''Приём поисковых данных, парсинг и возврат 
-    списка картежей с результатами поиска вакансий'''
-    IN_PARAMS["text"] = keyward
-    IN_PARAMS["area"] = AREA[region]
-    result = list()
-    for a in get_links(URL, IN_PARAMS):
-        result.append(get_vacancy(a))
-        time.sleep(1)
-    return result
-
-
-def main():
-    print(get_vacancys_data("python", "Москва"))
-
 
 if __name__ == "__main__":
     main()
