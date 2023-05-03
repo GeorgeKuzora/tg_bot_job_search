@@ -3,3 +3,6 @@ venv/
 *.org
 src/data/
 .idea
+.env
+pyrightconfig.json
+
