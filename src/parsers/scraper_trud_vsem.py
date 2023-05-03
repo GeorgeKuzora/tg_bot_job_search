@@ -1,6 +1,5 @@
 import requests
 from list_region import get_region_code
-from typing import Any
 
 BASE_URL = 'http://opendata.trudvsem.ru/api/v1/vacancies'
 
@@ -12,7 +11,14 @@ def create_link(link_api: str, data: tuple) -> str:
     return f"{link_api}/region/{get_region_code(region)}/?text={base_vacancy}&limit={limit_count}"
 
 
-def check_connection(response: Any) -> bool:
+def make_response(url: str) -> requests.Response:
+    """Соедиенение с сервером"""
+    response = requests.get(url)
+
+    return response
+
+
+def check_connection(response: requests.Response) -> bool:
     """Проверка соединения"""
     if response.status_code == 200:
         return True
@@ -20,26 +26,35 @@ def check_connection(response: Any) -> bool:
         return False
 
 
-def make_response(url: str) -> Any:
-    response = requests.get(url)
-    return response
-
-
 def search_vacancy(url: str) -> list:
     """функция поиска вакансий на сайте trudvsem.ru"""
-    response = make_response(url)
-    json_data = response.json()
-    list_jobs = []
-    try:
-        for item in json_data["results"]["vacancies"]:
-            vacancy = item["vacancy"]
-            list_jobs.append((vacancy["job-name"], vacancy["company"]["name"],
-                              vacancy["salary_min"], vacancy["region"]["name"],
-                              vacancy["vac_url"]))
-    except KeyError:
-        return [False]
+    response = make_response(url=url)
+    if check_connection(response):
+        json_data = response.json()
+        list_jobs = []
+        try:
+            vacancies = json_data["results"]["vacancies"]
+        except KeyError:
+            return []
+        else:
+            for item in vacancies:
+                vacancy = item["vacancy"]
+                job_name = vacancy["job-name"]
+                company_name = vacancy["company"]["name"]
+                salary_min = vacancy["salary_min"]
+                salary_max = vacancy["salary_max"]
+                salary = vacancy["salary"]
+                region_name = vacancy["region"]["name"]
+                vacancy_url = vacancy["vac_url"]
+                list_jobs.append((job_name, company_name, salary, region_name, vacancy_url))
+            return list_jobs
     else:
-        return list_jobs
+        raise ConnectionError
 
 
-print(search_vacancy(create_link(BASE_URL, ("Frontend", "Москва"))))
+def main():
+    print(search_vacancy(create_link(BASE_URL, ("строитель", "Кемерово"))))
+
+
+if __name__ == "__main__":
+    main()
