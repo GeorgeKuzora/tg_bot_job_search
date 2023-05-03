@@ -1,4 +1,4 @@
-import asyncio 
+import asyncio
 from aiogram import Bot, Dispatcher
 from src.config.config import Config, load_config
 from src.handlers import user_handlers
@@ -16,5 +16,6 @@ async def main() -> None:
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(main())
