@@ -1,4 +1,4 @@
-from src.interactors.interactor import InteracrorInterface
+from src.interactors.interactor import Interactor
 
 
 class Controller:
@@ -7,13 +7,13 @@ class Controller:
     @staticmethod
     def set_user_data(user_data: tuple) -> None:
         """Метод для записи данных пользователя полученных от Bot API"""
-        interface = InteracrorInterface()
+        interface = Interactor()
         interface.set_user_data(user_data)
 
     @staticmethod
     def set_region_data(region_data: tuple) -> None:
         """Метод для записи данных региона полученных от Bot API"""
-        interface = InteracrorInterface()
+        interface = Interactor()
         interface.set_region_data(region_data)
 
     @staticmethod
@@ -22,4 +22,4 @@ class Controller:
         Метод для получения списка вакансий
         по запрошенному ключевому слову
         """
-        return InteracrorInterface().get_vacancy_list(keyword_data)
+        return Interactor().get_vacancy_list(keyword_data)
