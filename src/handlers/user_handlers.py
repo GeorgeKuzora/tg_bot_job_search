@@ -3,10 +3,12 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from src.errors.errors import InvalidCommandException
 from src.lexicons.lexicon import LexiconRu
+from src.controllers.tg_controller import Controller
 
 
 lexicon_ru: LexiconRu = LexiconRu()
 router: Router = Router()
+
 
 @router.message(Command(commands=["start"]))
 async def process_start_command(message: Message) -> None:
@@ -19,8 +21,7 @@ async def process_start_command(message: Message) -> None:
         message.chat.first_name,
         message.chat.last_name,
     )
-    # controller = Controller()
-    # controller.set_user_data(user_data)
+    Controller.set_user_data(user_data)
 
 
 @router.message(Command(commands=["region"]))
@@ -35,8 +36,7 @@ async def process_region_command(message: Message) -> None:
             region.lower(),
         )
         await message.answer(lexicon_ru.get_region_command_answer(region))
-        # controller = Controller()
-        # controller.set_region_data(region_data)
+        Controller.set_region_data(region_data)
     except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_region_command_answer())
 
@@ -53,10 +53,8 @@ async def process_keyword_command(message: Message) -> None:
             keyword.lower(),
         )
         await message.answer(lexicon_ru.get_keyword_command_answer(keyword))
-        # controller = Controller()
-        # controller.set_keyword_data(keyword_data)
-        # vacancy_list = controller.get_vacancy_list()
-        # await message.answer(lexicon_ru.get_keyword_command_results(vacancies_data))
+        vacancies: list[tuple] = Controller.get_vacancy_list_by_keyword(keyword_data)
+        await message.answer(lexicon_ru.get_keyword_command_results(vacancies))
     except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
