@@ -10,3 +10,9 @@ class StorageInterface:
     @staticmethod
     def get_data_for_keyword(keyword_data: tuple) -> tuple:
         return ()
+
+
+class CompilerInterface:
+    @staticmethod
+    def get_vacancy_list(vacancy_request_data: tuple) -> list[tuple]:
+        return [tuple()]
