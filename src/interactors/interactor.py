@@ -11,7 +11,10 @@ class Interactor:
             print(f"{er}, {type(er)}, Can't get access to data storage")
 
     def set_region_data(self, region_data: tuple):
-        si.write_region_data(region_data)
+        try:
+            si.write_region_data(region_data)
+        except StorageAccessException as er:
+            print(f"{er}, {type(er)}, Can't get access to data storage")
 
     def get_vacancy_list(self, keyword_data: tuple) -> list[tuple]:
         vacancy_request_data: tuple = self._get_data_for_vacancies_request(keyword_data)
