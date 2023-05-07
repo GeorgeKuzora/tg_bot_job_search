@@ -1,4 +1,6 @@
-
 class InvalidCommandException(Exception):
     """Класс исключений при вводе комманд пользователем"""
-    pass
+
+
+class StorageAccessException(Exception):
+    """Класс исключений при работе с хранилищем данных"""
