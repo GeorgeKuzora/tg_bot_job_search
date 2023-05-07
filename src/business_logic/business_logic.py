@@ -1,3 +1,6 @@
+from src.errors.errors import StorageAccessException
+
+
 SET_AREAS = {
     "россия": 113,
     "москва": 1,
