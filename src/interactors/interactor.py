@@ -1,10 +1,14 @@
+from src.errors.errors import StorageAccessException
 from src.interactors.external_interface import StorageInterface as si
 from src.interactors.external_interface import CompilerInterface as ci
 
 
 class Interactor:
     def set_user_data(self, user_data: tuple):
-        si.write_user_data(user_data)
+        try:
+            si.write_user_data(user_data)
+        except StorageAccessException as er:
+            print(f"{er}, {type(er)}, Can't get access to data storage")
 
     def set_region_data(self, region_data: tuple):
         si.write_region_data(region_data)
