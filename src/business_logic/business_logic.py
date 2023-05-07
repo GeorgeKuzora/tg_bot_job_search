@@ -26,3 +26,23 @@ SET_AREAS = {
     }
 
 DEFAULT_AREA_CODE = SET_AREAS["россия"]
+
+
+def construct_vacancy_request(storage_request: dict) -> tuple:
+    keyword = get_keyword_from_storage_data(storage_request)
+    region = get_region_from_storage_data(storage_request)
+    vacancy_request = (keyword,
+                       region)
+    return vacancy_request
+
+
+def get_region_from_storage_data(storage_request: dict) -> int:
+    if storage_request["region"] not in SET_AREAS:
+        return DEFAULT_AREA_CODE
+    return SET_AREAS[storage_request["region"]]
+
+
+def get_keyword_from_storage_data(storage_request) -> str | None:
+    if not storage_request["keyword"]:
+        raise StorageAccessException
+    return storage_request["keyword"]
