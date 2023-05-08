@@ -1,7 +1,7 @@
 from src.errors.errors import StorageAccessException
 
 
-SET_AREAS = {
+SET_AREAS: dict = {
     "россия": 113,
     "москва": 1,
     "санкт-петербург": 2,
@@ -25,10 +25,11 @@ SET_AREAS = {
     "симферополь": 131
     }
 
-DEFAULT_AREA_CODE = SET_AREAS["россия"]
+DEFAULT_AREA_CODE: int = SET_AREAS["россия"]
 
 
 def construct_vacancy_request(storage_request: dict) -> tuple:
+    """Класс для построения кортежа содержащего ключевое слово и регион"""
     keyword = get_keyword_from_storage_data(storage_request)
     region = get_region_from_storage_data(storage_request)
     vacancy_request = (keyword,
@@ -37,12 +38,16 @@ def construct_vacancy_request(storage_request: dict) -> tuple:
 
 
 def get_region_from_storage_data(storage_request: dict) -> int:
+    """Класс для получения данных о регионе из запроса к хранилищу данных"""
     if storage_request["region"] not in SET_AREAS:
         return DEFAULT_AREA_CODE
     return SET_AREAS[storage_request["region"]]
 
 
 def get_keyword_from_storage_data(storage_request) -> str | None:
+    """
+    Класс для получения данных о ключевом слове из запроса к хранилищу данных
+    """
     if not storage_request["keyword"]:
         raise StorageAccessException
     return storage_request["keyword"]
