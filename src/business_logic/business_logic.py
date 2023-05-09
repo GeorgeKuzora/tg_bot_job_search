@@ -59,3 +59,10 @@ class VacancyRequest:
         if not storage_request["keyword"]:
             raise StorageAccessException
         return storage_request["keyword"]
+
+
+class VacancyResponse:
+    @staticmethod
+    def get_fixed_number_of_results(
+            results: list[tuple], number_of_results: int) -> list[tuple]:
+        return results[:number_of_results]
