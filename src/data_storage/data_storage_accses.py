@@ -68,6 +68,13 @@ def save_list_vacancies(list_company: list) -> None:
                       ensure_ascii=False,
                       separators=(',', ': '))
 
+def read_list_vacancy(list_company: list):
+     """Считывание списка вакансий из парсера"""
+     for i in range(len(list_company)):
+        new_vacancy = create_vacancy_from_tuple(list_company[i])
+        json_str = create_json_str(new_vacancy)
+        print(json_str)
+
 
 def check_data(PATH: str) -> bool:
     """Проверка наличия папки data"""
