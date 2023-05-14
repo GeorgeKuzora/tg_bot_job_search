@@ -1,4 +1,7 @@
 import json
+import os
+
+PATH = os.getcwd () +"\src\data_storage\data\\"
 
 class Vacancy:
     def __init__(self, name, company, solary, link) -> None:
@@ -16,12 +19,14 @@ def save_tg_data():
    """Запись данных пользователя в папку data в формате json"""
    pass
 
+
 def read_list_vacancy(list_company: list):
      """Считывание списка вакансий из парсера"""
      for i in range(len(list_company)):
         new_vacancy = create_vacancy_from_tuple(list_company[i])
         json_str = create_json_str(new_vacancy)
-        print(json_str)
+        if check_data(PATH) == True:
+            save_json_in_file(json_str)
 
 
 def create_vacancy_from_tuple(vacancy_data: tuple) -> str:
@@ -38,10 +43,22 @@ def create_json_str(new_vacancy) -> str:
                              separators=(',', ': '))
         return json_str
 
-def save_json_in_file(json_str: str):
+
+def save_json_in_file(json_st: str):
      """Сохранение строки json в файл"""
-     with open("sample.json", "w") as outfile:
-        json.dump(json_str, outfile)
+     with open(PATH + "sample.json", "a") as jsonfile:
+        jsonfile.write(json_st)
+        jsonfile.write("\n")
+        jsonfile.closed
+
+
+def check_data(PATH: str) -> bool:
+    """Проверка наличия папки data, если отсутствует то папка создается"""
+    if not os.path.exists(PATH):
+        os.mkdir(PATH)
+        return True
+    else:
+        return True
 
 
 if __name__ == "__main__":
