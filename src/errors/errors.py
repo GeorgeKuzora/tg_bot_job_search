@@ -4,3 +4,10 @@ class InvalidCommandException(Exception):
 
 class StorageAccessException(Exception):
     """Класс исключений при работе с хранилищем данных"""
+
+
+class RegionNotDefinedExeption(Exception):
+    """
+    Класс исключений возникающих при отсутствии данных
+    о регионе пользователя
+    """
