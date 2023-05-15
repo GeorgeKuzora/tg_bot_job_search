@@ -1,4 +1,4 @@
-from src.errors.errors import StorageAccessException
+from src.errors.errors import IdNotDefinedExeption, KeywordNotDefinedExeption, RegionNotDefinedExeption, StorageAccessException
 
 
 SET_AREAS: dict = {
@@ -41,24 +41,29 @@ class VacancyRequest:
         vacancy_request = (keyword, region)
         return vacancy_request
 
-    @staticmethod
-    def get_region_from_storage_data(storage_request: dict) -> int:
+    def _set_region(self, region: str) -> str:
         """
-        Функция для получения данных о регионе из запроса к хранилищу данных
+        Функция для установки атрибута region
         """
-        if storage_request["region"] not in SET_AREAS:
+        if region not in SET_AREAS:
             return DEFAULT_AREA_CODE
-        return SET_AREAS[storage_request["region"]]
+        return SET_AREAS[region]
 
-    @staticmethod
-    def get_keyword_from_storage_data(storage_request) -> str | None:
+    def _set_keyword(self, keyword: str) -> str:
         """
-        Функция для получения данных о ключевом слове
-        из запроса к хранилищу данных
+        Функция для установки атрибута keyword
         """
-        if not storage_request["keyword"]:
-            raise StorageAccessException
-        return storage_request["keyword"]
+        if not keyword:
+            raise KeywordNotDefinedExeption
+        return keyword
+
+    def _set_user_id(self, user_id: str) -> str:
+        """
+        Функция для установки атрибута id
+        """
+        if not user_id:
+            raise IdNotDefinedExeption
+        return user_id
 
 
 class VacancyResponse:
