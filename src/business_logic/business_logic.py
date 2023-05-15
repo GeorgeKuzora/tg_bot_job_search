@@ -1,9 +1,8 @@
 from src.errors.errors import (
     IdNotDefinedExeption,
     KeywordNotDefinedExeption,
-    RegionNotDefinedExeption,
-    StorageAccessException,
 )
+from collections import namedtuple
 
 
 SET_AREAS: dict = {
@@ -35,22 +34,13 @@ DEFAULT_AREA_CODE: str = SET_AREAS["россия"]
 
 class VacancyRequest:
     """Класс для построения запроса для получения списка вакансий"""
+    SerializedRequest = namedtuple("SerializedRequest", "region keyword")
 
     def __init__(self, user_id: str, region: str, keyword: str) -> None:
         """Конструктор объекта"""
         self.user_id: str = self._set_user_id(user_id)
         self.region: str = self._set_region(region)
         self.keyword: str = self._set_keyword(keyword)
-
-    @staticmethod
-    def construct_vacancy_request(storage_request: dict) -> tuple:
-        """
-        Функция для построения кортежа содержащего ключевое слово и регион
-        """
-        keyword = VacancyRequest.get_keyword_from_storage_data(storage_request)
-        region = VacancyRequest.get_region_from_storage_data(storage_request)
-        vacancy_request = (keyword, region)
-        return vacancy_request
 
     def _set_region(self, region: str) -> str:
         """
@@ -75,6 +65,12 @@ class VacancyRequest:
         if not user_id:
             raise IdNotDefinedExeption
         return user_id
+
+    def serialize_request(self) -> SerializedRequest:
+        """
+        Функция для построения кортежа содержащего регион и ключевое слово
+        """
+        return self.SerializedRequest(region=self.region, keyword=self.keyword)
 
 
 class VacancyResponse:
