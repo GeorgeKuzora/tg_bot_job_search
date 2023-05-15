@@ -11,3 +11,11 @@ class RegionNotDefinedExeption(Exception):
     Класс исключений возникающих при отсутствии данных
     о регионе пользователя
     """
+
+
+class KeywordNotDefinedExeption(Exception):
+    """
+    Класс исключений возникающих при отсутствии данных
+    о ключевом слове пользователя
+    """
+
