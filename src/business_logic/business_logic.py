@@ -1,4 +1,9 @@
-from src.errors.errors import IdNotDefinedExeption, KeywordNotDefinedExeption, RegionNotDefinedExeption, StorageAccessException
+from src.errors.errors import (
+    IdNotDefinedExeption,
+    KeywordNotDefinedExeption,
+    RegionNotDefinedExeption,
+    StorageAccessException,
+)
 
 
 SET_AREAS: dict = {
@@ -30,6 +35,12 @@ DEFAULT_AREA_CODE: str = SET_AREAS["россия"]
 
 class VacancyRequest:
     """Класс для построения запроса для получения списка вакансий"""
+
+    def __init__(self, user_id: str, region: str, keyword: str) -> None:
+        """Конструктор объекта"""
+        self.user_id: str = self._set_user_id(user_id)
+        self.region: str = self._set_region(region)
+        self.keyword: str = self._set_keyword(keyword)
 
     @staticmethod
     def construct_vacancy_request(storage_request: dict) -> tuple:
