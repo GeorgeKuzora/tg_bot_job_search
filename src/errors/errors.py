@@ -19,3 +19,9 @@ class KeywordNotDefinedExeption(Exception):
     о ключевом слове пользователя
     """
 
+
+class IdNotDefinedExeption(Exception):
+    """
+    Класс исключений возникающих при отсутствии данных
+    об id пользователя
+    """
