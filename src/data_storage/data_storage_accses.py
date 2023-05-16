@@ -1,5 +1,6 @@
 import json
 import os
+import datetime
 
 PATH = os.getcwd () +"\src\data_storage\data\\"
 
@@ -18,9 +19,16 @@ class User:
         self.keyword = keyword
 
 
-def read_tg_data(user_data: tuple) -> None:
-    """Считывание данных пользователя полученные от тг бота"""
-    pass
+def create_user_data(user_data: tuple) -> str:
+    """Создание объекта класса User"""
+    return User(user_data[0], user_data[1], user_data[2])
+
+
+def name_file(user_data: tuple) -> str:
+    """Формирование имени файла"""
+    new_user = create_user_data(user_data)
+    now = datetime.datetime.now()
+    return User.new_user.user_id + "_" + User.new_user.region + "_" + User.new_user.keyword + "_" + now
 
 
 def save_tg_data():
