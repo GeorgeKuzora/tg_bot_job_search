@@ -10,6 +10,14 @@ class Vacancy:
         self.solary = solary
         self.link = link
 
+class User:
+    """Класс для работы с данными пользователя"""
+    def __init__(self, user_id, region, keyword) -> None:
+        self.user_id = user_id
+        self.region = region
+        self.keyword = keyword
+
+
 def read_tg_data(user_data: tuple) -> None:
     """Считывание данных пользователя полученные от тг бота"""
     pass
