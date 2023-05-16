@@ -36,19 +36,30 @@ def save_tg_data():
    pass
 
 
-def read_list_vacancy(list_company: list):
-     """Считывание списка вакансий из парсера"""
-     for i in range(len(list_company)):
-        new_vacancy = create_vacancy_from_tuple(list_company[i])
-        json_str = create_json_str(new_vacancy)
-        if check_data(PATH) == True:
-            save_json_in_file(json_str)
-
-
 def create_vacancy_from_tuple(vacancy_data: tuple) -> str:
      """Создание объекта класса Vacancy из кортежа"""
      return  Vacancy(vacancy_data[0], vacancy_data[1], vacancy_data[2], vacancy_data[3])
 
+
+def create_list_vacancies(list_company: list):
+     """Создание списка словарей вакансий"""
+     list_vacancies = list()
+     for i in range(len(list_company)):
+        list_vacancies.append(create_dict_vacancy(list_company[i]))
+     print(list_vacancies)
+
+
+
+def create_dict_vacancy(vacancy: tuple) -> dict:
+    """Создание словаря вакансии из кортежа"""
+    new_vacancy = create_vacancy_from_tuple(vacancy)
+    return new_vacancy.__dict__
+
+
+def save_list_vacancies(list_vacancies: list) -> None:
+    """Сохранение списка вакансий в файл"""
+    if check_data(PATH) == True:
+        save_json_in_file(json_str)
 
 def create_json_str(new_vacancy) -> str:
         """Создание json строки из объекта класса Vacancy"""
@@ -90,4 +101,4 @@ if __name__ == "__main__":
                 ('Разработчик Java', 'TINKOFF', '', 'https://career.habr.com/vacancies/1000121969'),
                 ('Java-разработчик', 'Bell Integrator', '', 'https://career.habr.com/vacancies/1000115597')]
 
-    read_list_vacancy(list_vacancy)
+    create_list_vacancies(list_vacancy)
