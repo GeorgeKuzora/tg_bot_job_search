@@ -53,12 +53,15 @@ def save_json_in_file(json_st: str):
 
 
 def check_data(PATH: str) -> bool:
-    """Проверка наличия папки data, если отсутствует то папка создается"""
+    """Проверка наличия папки data"""
     if not os.path.exists(PATH):
-        os.mkdir(PATH)
-        return True
-    else:
-        return True
+        create_dir(PATH)
+    True
+
+
+def create_dir(PATH: str) -> None:
+    """Создание папки data"""
+    return os.mkdir(PATH)
 
 
 if __name__ == "__main__":
