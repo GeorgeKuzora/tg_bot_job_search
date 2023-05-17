@@ -80,8 +80,3 @@ class VacancyRequestHandler:
             full += part
         return full
 
-class VacancyResponse:
-    @staticmethod
-    def get_fixed_number_of_results(
-            results: list[tuple], number_of_results: int) -> list[tuple]:
-        return results[:number_of_results]
