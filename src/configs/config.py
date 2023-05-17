@@ -16,3 +16,6 @@ def load_config(path: str | None):
     env = Env()
     env.read_env(path)
     return Config(tg_bot=TgBot(token=env("BOT_TOKEN")))
+
+
+request_quantity: int = 3
