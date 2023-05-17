@@ -6,23 +6,6 @@ from src.interactors.external_interface import CompilerInterface as ci
 class Interactor:
     """Класс для управления взаимодействием модулями программы"""
 
-    def set_user_data(self, user_data: tuple):
-        """Метод для записи данных пользователя в систему хранения"""
-        try:
-            si.write_user_data(user_data)
-        except StorageAccessException as er:
-            print(f"{er}, {type(er)}, Can't get access to data storage")
-
-    def set_region_data(self, region_data: tuple):
-        """
-        Метод для записи данных о регионе выбранном пользователем
-        в систему хранения
-        """
-        try:
-            si.write_region_data(region_data)
-        except StorageAccessException as er:
-            print(f"{er}, {type(er)}, Can't get access to data storage")
-
     def get_vacancy_list(self, keyword_data: tuple) -> list[tuple]:
         """
         Метод для получения списка с вакансиями и передачи его пользователю
