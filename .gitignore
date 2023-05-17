@@ -5,4 +5,4 @@ src/data/
 .idea
 .env
 pyrightconfig.json
-
+src/data_storage/data/
