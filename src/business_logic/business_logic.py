@@ -67,7 +67,8 @@ class VacancyRequestHandler:
             raise IdNotDefinedExeption
         return user_id
 
-    def serialize_request(self) -> SerializedRequest:
+    @property
+    def request(self) -> SerializedRequest:
         """
         Функция для построения кортежа содержащего регион и ключевое слово
         """
