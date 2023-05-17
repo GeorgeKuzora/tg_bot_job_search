@@ -18,3 +18,14 @@ class Handler:
             si.write_region_data(region_data)
         except StorageAccessException as er:
             print(f"{er}, {type(er)}, Can't get access to data storage")
+
+    def set_keyword_data(self, keyword_data: tuple):
+        """
+        Метод для записи данных о регионе выбранном пользователем
+        в систему хранения
+        """
+        try:
+            si.write_keyword_data(keyword_data)
+        except StorageAccessException as er:
+            print(f"{er}, {type(er)}, Can't get access to data storage")
+
