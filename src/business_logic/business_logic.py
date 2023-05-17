@@ -80,3 +80,12 @@ class VacancyRequestHandler:
             full += part
         return full
 
+    def get_part_results(
+        self, raw_results: list[list[tuple]], quantity: int
+    ) -> list[tuple]:
+        part_results: list = []
+        for part_list in raw_results:
+            for i in range(quantity):
+                if part_list[i]:
+                    part_results.append(part_list[i])
+        return part_results
