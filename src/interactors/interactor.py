@@ -1,6 +1,8 @@
+from src.business_logic.business_logic import VacancyRequestHandler
+from src.compilers.compiler import Compiler
+from src.configs.config import request_quantity
 from src.errors.errors import StorageAccessException
-from src.interactors.external_interface import StorageInterface as si
-from src.interactors.external_interface import CompilerInterface as ci
+from ..data_storage.storage_access_handler import Handler
 
 
 class Interactor:
@@ -10,18 +12,11 @@ class Interactor:
         """
         Метод для получения списка с вакансиями и передачи его пользователю
         """
-        try:
-            vacancy_request_data: tuple = self._get_data_for_vacancies_request(
-                keyword_data
-            )
-            return ci.get_vacancy_list(vacancy_request_data)
-        except StorageAccessException:
-            return [("Can't access data storage",)]
-        except RuntimeError:
-            return [("Can't access job servicies",)]
-
-    def _get_data_for_vacancies_request(self, keyword_data: tuple) -> tuple:
-        """Метод для получения информации к ключевому слову,
-        для создания запроса вакансий"""
-        data_for_keyword: tuple = si.get_data_for_keyword(keyword_data)
-        return data_for_keyword
+        handler = Handler()
+        handler.set_keyword_data(keyword_data)
+        request_data = self.handler.get_request_data(keyword_data.user_id)
+        request_handler = VacancyRequestHandler(*request_data)
+        compiler = Compiler()
+        vacancies = compiler.get_response(request_handler.request)
+        handler.save_vacancies(request_handler.get_full_results(vacancies))
+        return request_handler.get_part_results(vacancies, request_quantity)
