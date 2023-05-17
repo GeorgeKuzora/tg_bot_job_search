@@ -32,8 +32,9 @@ SET_AREAS: dict = {
 DEFAULT_AREA_CODE: str = SET_AREAS["россия"]
 
 
-class VacancyRequest:
+class VacancyRequestHandler:
     """Класс для построения запроса для получения списка вакансий"""
+
     SerializedRequest = namedtuple("SerializedRequest", "region keyword")
 
     def __init__(self, user_id: str, region: str, keyword: str) -> None:
