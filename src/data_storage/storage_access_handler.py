@@ -29,3 +29,8 @@ class Handler:
         except StorageAccessException as er:
             print(f"{er}, {type(er)}, Can't get access to data storage")
 
+    def get_request_data(self, user_id):
+        pass
+
+    def save_vacancies(self, vacancies):
+        pass
