@@ -74,6 +74,11 @@ class VacancyRequestHandler:
         """
         return self.SerializedRequest(region=self.region, keyword=self.keyword)
 
+    def get_full_results(self, raw_results: list[list[tuple]]) -> list[tuple]:
+        full: list = []
+        for part in raw_results:
+            full += part
+        return full
 
 class VacancyResponse:
     @staticmethod
