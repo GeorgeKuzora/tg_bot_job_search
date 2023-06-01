@@ -1,8 +1,9 @@
 import json
 import os
 import datetime
+from pathlib import Path
 
-PATH = os.getcwd () +"/src/data_storage/data//"
+DATA_DIR = "data"
 
 class Vacancy:
     def __init__(self, name, company, salary, link) -> None:
@@ -10,6 +11,42 @@ class Vacancy:
         self.company = company
         self.salary = salary
         self.link = link
+
+def write_data(request_data: dict):
+    data_dir_path = set_path_to_data_dir()
+    address = request_data["id"] + ".json"
+    file_path = set_file_path(address, data_dir_path)
+    if file_path.exists() and file_path.is_file():
+        request_data = merge_with_user_data(request_data, file_path)
+    write_data_to_json_file(request_data, file_path)
+
+
+def set_path_to_data_dir():
+    path = Path(".")
+    data_dir_path = path / DATA_DIR
+    if data_dir_path.exists() and data_dir_path.is_dir():
+        return data_dir_path
+    data_dir_path.mkdir()
+    return data_dir_path
+
+
+def set_file_path(file_name: str, data_dir_path: Path):
+    file_path = data_dir_path / file_name
+    return file_path
+
+
+def merge_with_user_data(request: dict, file_path: Path):
+    with open(file_path.as_posix(), "r", encoding="utf-8") as file:
+        file_contents = json.load(file)
+    for key in request:
+        if request[key]:
+            file_contents[key] = request[key]
+    return file_contents
+
+
+def write_data_to_json_file(data, file_path):
+    with open(file_path.as_posix(), "w", encoding="utf-8") as file:
+        json.dump(data, file)
 
 
 def create_list_vacancies(list_company: tuple) -> list:
