@@ -67,24 +67,17 @@ class Keyword:
         }
 
 
+class Controler:
     """Класс для задания методов работы контроллера"""
 
-    @staticmethod
-    def set_user_data(user_data: tuple) -> None:
-        """Метод для записи данных пользователя полученных от Bot API"""
-        interface = Interactor()
-        interface.set_user_data(user_data)
+    def __init__(self, request: Request) -> None:
+        self.request: Request = request
 
-    @staticmethod
-    def set_region_data(region_data: tuple) -> None:
-        """Метод для записи данных региона полученных от Bot API"""
-        interface = Interactor()
-        interface.set_region_data(region_data)
+    def send_request(self):
+        Interactor.write_request(self.request.parse_request())
 
-    @staticmethod
-    def get_vacancy_list_by_keyword(keyword_data: tuple) -> list[tuple]:
-        """
-        Метод для получения списка вакансий
-        по запрошенному ключевому слову
-        """
-        return Interactor().get_vacancy_list(keyword_data)
+    def get_response(self):
+        pass
+
+    def _convert_none_to_undefined_value(self):
+        pass
