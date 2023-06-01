@@ -55,16 +55,21 @@ async def process_region_command(message: Message) -> None:
 async def process_keyword_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /keyword"""
     try:
-        keyword: str = set_message_text(message)
-        keyword_data: tuple = (
-            message.date,
-            message.chat.id,
+        user: ctrl.User = ctrl.User(
+            str(message.chat.id),
             message.chat.username,
-            keyword.lower(),
         )
-        await message.answer(lexicon_ru.get_keyword_command_answer(keyword))
-        vacancies: list[tuple] = Controller.get_vacancy_list_by_keyword(keyword_data)
-        await message.answer(lexicon_ru.get_keyword_command_results(vacancies))
+        keyword: ctrl.Keyword = ctrl.Keyword(
+            message.date,
+            user,
+            f"{set_message_text(message.text)}".lower(),
+        )
+        await message.answer(lexicon_ru.get_keyword_command_answer(
+                                                                keyword.value))
+        controler = ctrl.Controler(keyword)
+        controler.send_request()
+
+        await message.answer(lexicon_ru.get_keyword_command_results([tuple()]))
     except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_keyword_command_answer())
 
@@ -75,7 +80,7 @@ async def process_other_input(message: Message) -> None:
     await message.answer(lexicon_ru.get_invalid_command_answer())
 
 
-def set_message_text(message: Message) -> str:
+def set_message_text(message: str | None) -> str | None:
     """
     Функция для извлечение текста пользователя из введенной комманды.
     Если возникает IndexError вызвается InvalidCommandExeption"""
