@@ -34,15 +34,19 @@ async def process_start_command(message: Message) -> None:
 async def process_region_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /region"""
     try:
-        region = set_message_text(message)
-        region_data: tuple = (
-            message.date,
-            message.chat.id,
+        user: ctrl.User = ctrl.User(
+            str(message.chat.id),
             message.chat.username,
-            region.lower(),
         )
-        await message.answer(lexicon_ru.get_region_command_answer(region))
-        Controller.set_region_data(region_data)
+        region: ctrl.Region = ctrl.Region(
+            message.date,
+            user,
+            f"{set_message_text(message.text)}".lower(),
+        )
+        await message.answer(lexicon_ru.get_region_command_answer(
+                                                                region.value))
+        controler = ctrl.Controler(region)
+        controler.send_request()
     except InvalidCommandException:
         await message.answer(lexicon_ru.get_invalid_region_command_answer())
 
