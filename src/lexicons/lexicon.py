@@ -7,7 +7,7 @@ class LexiconRu:
             "/keyword - получить вакансии по ключевому слову"
         )
 
-    def get_region_command_answer(self, region: str) -> str:
+    def get_region_command_answer(self, region: str | None) -> str:
         """Метод возвращает ответ на комманду /region"""
         return f"Вы задали регион: {region}"
 
@@ -15,7 +15,7 @@ class LexiconRu:
         """Метод возвращает ответ на неверную комманду /region"""
         return "Вы не указали название региона"
 
-    def get_keyword_command_answer(self, keyword: str) -> str:
+    def get_keyword_command_answer(self, keyword: str | None) -> str:
         """Метод возвращает ответ на комманду /keyword"""
         return f"Вы задали ключевое слово: {keyword}"
 
