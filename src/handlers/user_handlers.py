@@ -85,7 +85,7 @@ def set_message_text(message: str | None) -> str | None:
     Функция для извлечение текста пользователя из введенной комманды.
     Если возникает IndexError вызвается InvalidCommandExeption"""
     try:
-        message_text = message.text.split(maxsplit=1)[1]
+        message_text: str = f"{message}".split(maxsplit=1)[1]
         validate_message_text(message_text)
         return message_text
     except IndexError:
@@ -94,7 +94,7 @@ def set_message_text(message: str | None) -> str | None:
 
 def validate_message_text(message_text: str) -> None:
     """
-    Функция для проверки был ли введн пользователем валидный текст команды.
+    Функция для проверки был ли введен пользователем валидный текст команды.
     Если текст на валиден вызвает исключение InvalidCommandExeption.
     """
     if not message_text:
