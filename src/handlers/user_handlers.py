@@ -1,27 +1,33 @@
+from datetime import datetime
 from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 from src.errors.errors import InvalidCommandException
 from src.lexicons.lexicon import LexiconRu
-from src.controllers.tg_controller import Controller
+import src.controllers.tg_controller as ctrl
 
 
 lexicon_ru: LexiconRu = LexiconRu()
 router: Router = Router()
+UNDEFINED_STR: str = "undefined"
+UNDEFINED_DATE: datetime = datetime.now()
 
 
 @router.message(Command(commands=["start"]))
 async def process_start_command(message: Message) -> None:
     """Функция для обработки команды пользователя: /start"""
     await message.answer(lexicon_ru.get_start_command_answer())
-    user_data: tuple = (
-        message.date,
-        message.chat.id,
+    user: ctrl.User = ctrl.User(
+        str(message.chat.id),
         message.chat.username,
-        message.chat.first_name,
-        message.chat.last_name,
     )
-    Controller.set_user_data(user_data)
+    fullname: ctrl.Fullname = ctrl.Fullname(
+        message.date,
+        user,
+        f"{message.chat.first_name} _ {message.chat.last_name}",
+    )
+    controler = ctrl.Controler(fullname)
+    controler.send_request()
 
 
 @router.message(Command(commands=["region"]))
